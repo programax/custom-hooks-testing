@@ -8,10 +8,9 @@ const INTERVAL_TIME = 100;
 
 function useHook() {
     const [users, setUsers] = useState([]);
-
-    useInterval(useCallback(() => {
-        setUsers([...users, {id: Math.random(), name: 'leo'}]);
-    }, [users]), INTERVAL_TIME);
+    useInterval(() => {
+        setUsers([...users, { id: Math.random(), name: 'leo' }]);
+    }, INTERVAL_TIME);
 
     return { users };
 }
@@ -22,6 +21,7 @@ describe('useInterval', () => {
     it('works', async () => {
         const hook = mountHook(useHook);
 
+        expect(hook.data.users).to.have.lengthOf(0);
         await wait(INTERVAL_TIME + 1);
         expect(hook.data.users).to.have.lengthOf(1);
         await wait(INTERVAL_TIME + 1);

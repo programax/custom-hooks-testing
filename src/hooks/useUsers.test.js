@@ -1,17 +1,18 @@
 import { expect } from 'chai';
 
 import useUsers from './useUsers';
-import { mountHook, supressWarning } from '../../tests/utils';
+import { supressWarning, mountHook } from '../../tests/utils';
 
 describe('useUsers', () => {
     supressWarning();
 
-    it('works', async () => {
+    it('works', () => {
         const hook = mountHook(useUsers);
 
-        hook.data.addUser({id: 111, name: 'leo'});
+        expect(hook.data.users).to.have.lengthOf(0);
+        hook.data.addUser({ id: 1111, name: 'leo' });
         expect(hook.data.users).to.have.lengthOf(1);
-        hook.data.addUser({id: 222, name: 'juan'});
+        hook.data.addUser({ id: 2222, name: 'leo2' });
         expect(hook.data.users).to.have.lengthOf(2);
 
         hook.wrapper.unmount();
