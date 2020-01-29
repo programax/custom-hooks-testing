@@ -4,25 +4,28 @@ import { expect } from 'chai';
 import useInterval from './useInterval';
 import { mountHook, wait, supressWarning } from '../../tests/utils';
 
-function useHook() {
-    const [arr, setArr] = useState([]);
-    useInterval(useCallback(() => {
-        setArr([...arr, {id: Math.random(), name: 'yo'}]);
-    }, [arr]), 100);
+const INTERVAL_TIME = 100;
 
-    return {arr};
+function useHook() {
+    const [users, setUsers] = useState([]);
+    useInterval(() => {
+        setUsers([...users, { id: Math.random(), name: 'leo' }]);
+    }, INTERVAL_TIME);
+
+    return { users };
 }
 
-describe('useApi', () => {
+describe('useInterval', () => {
     supressWarning();
 
     it('works', async () => {
         const hook = mountHook(useHook);
 
-        await wait(101);
-        expect(hook.data.arr).to.have.lengthOf(1);
-        await wait(101);
-        expect(hook.data.arr).to.have.lengthOf(2);
+        expect(hook.data.users).to.have.lengthOf(0);
+        await wait(INTERVAL_TIME + 1);
+        expect(hook.data.users).to.have.lengthOf(1);
+        await wait(INTERVAL_TIME + 1);
+        expect(hook.data.users).to.have.lengthOf(2);
 
         hook.wrapper.unmount();
     });
